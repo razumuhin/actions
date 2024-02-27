@@ -31,9 +31,7 @@ jobs:
     - name: Build Docker image
       run: |
         docker build -t razumuhin/html:${{ steps.determine_version.outputs.NEW_VERSION }} src
-        docker tag razumuhin/html:${{ steps.determine_version.outputs.NEW_VERSION }} razumuhin/html:latest
       
     - name: Push Docker image to Docker Hub
       run: |
         docker push razumuhin/html:${{ steps.determine_version.outputs.NEW_VERSION }}
-        docker push razumuhin/html:latest
