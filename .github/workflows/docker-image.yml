@@ -20,7 +20,7 @@ jobs:
         password: ${{ secrets.DOCKERHUB_ACCESS_TOKEN }}
         
     - name: Build Docker image
-      run: docker build -t razumuhin/html:latest src
+      run: docker build -t razumuhin/html:${{ github.sha }} src
       
     - name: Push Docker image to Docker Hub
-      run: docker push razumuhin/html:latest
+      run: docker push razumuhin/html:${{ github.sha }}
