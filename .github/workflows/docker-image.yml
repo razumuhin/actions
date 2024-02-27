@@ -18,9 +18,19 @@ jobs:
       with:
         username: ${{ secrets.DOCKERHUB_USERNAME }}
         password: ${{ secrets.DOCKERHUB_ACCESS_TOKEN }}
+    - name: Get last tag
+      id: get_last_tag
+      run: echo ::set-output name=TAG::$(curl -s https://registry.hub.docker.com/v1/repositories/razumuhin/html/tags | jq -r '.[].name' | grep '^v[0-9]\+\.[0-9]\+$' | sort -V | tail -n1)
         
+    - name: Determine next version
+      id: determine_version
+      run: echo ::set-output name=NEW_VERSION::$(echo "${{ steps.get_last_tag.outputs.TAG }}" | awk -F. '{$NF = $NF + 1;} 1' | sed 's/ /./g')
+
     - name: Build Docker image
-      run: docker build -t razumuhin/html:${{ github.sha }} src
+      run: docker build -t razumuhin/html:v${{ steps.determine_version.outputs.NEW_VERSION }} src
       
     - name: Push Docker image to Docker Hub
-      run: docker push razumuhin/html:${{ github.sha }}
+      run: docker push razumuhin/html:v${{ steps.determine_version.outputs.NEW_VERSION }}
+
+      
+
