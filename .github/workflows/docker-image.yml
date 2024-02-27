@@ -26,7 +26,7 @@ jobs:
         
     - name: Determine next version
       id: determine_version
-      run: echo ::set-output name=NEW_VERSION::v$(( $(echo "${{ steps.get_last_tag.outputs.TAG }}" | cut -c 2-) + 1 ))
+      run: echo ::set-output name=NEW_VERSION::v$(( $(echo "${{ steps.get_last_tag.outputs.TAG }}" | cut -c 3-) + 1 ))
 
     - name: Build Docker image
       run: |
