@@ -1,6 +1,3 @@
-
-      
-
 name: Docker Build and Push
 
 on:
@@ -24,18 +21,19 @@ jobs:
         
     - name: Get last tag
       id: get_last_tag
-      run: echo ::set-output name=TAG::$(curl -s https://registry.hub.docker.com/v1/repositories/razumuhin/html/tags | jq -r '.[].name' | grep '^v[0-9]\+\.[0-9]\+$' | sort -V | tail -n1)
+      run: echo ::set-output name=TAG::$(curl -s https://registry.hub.docker.com/v1/repositories/razumuhin/html/tags | jq -r '.[].name' | grep '^v[0-9]+\.[0-9]+$' | sort -V | tail -n1)
+      if: steps.get_last_tag.outputs.TAG != null
         
     - name: Determine next version
       id: determine_version
-      run: echo ::set-output name=NEW_VERSION::$(echo "${{ steps.get_last_tag.outputs.TAG }}" | awk -F. '{$NF = $NF + 1;} 1' | sed 's/ /./g')
+      run: echo ::set-output name=NEW_VERSION::v$(( $(echo "${{ steps.get_last_tag.outputs.TAG }}" | cut -c 2-) + 1 ))
 
     - name: Build Docker image
       run: |
-        docker build -t razumuhin/html:v${{ steps.get_last_tag.outputs.TAG }} src
-        docker tag razumuhin/html:v${{ steps.get_last_tag.outputs.TAG }} razumuhin/html:v${{ steps.determine_version.outputs.NEW_VERSION }}
+        docker build -t razumuhin/html:${{ steps.determine_version.outputs.NEW_VERSION }} src
+        docker tag razumuhin/html:${{ steps.determine_version.outputs.NEW_VERSION }} razumuhin/html:latest
       
     - name: Push Docker image to Docker Hub
       run: |
-        docker push razumuhin/html:v${{ steps.get_last_tag.outputs.TAG }}
-        docker push razumuhin/html:v${{ steps.determine_version.outputs.NEW_VERSION }}
+        docker push razumuhin/html:${{ steps.determine_version.outputs.NEW_VERSION }}
+        docker push razumuhin/html:latest
