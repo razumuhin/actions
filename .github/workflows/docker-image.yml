@@ -35,3 +35,4 @@ jobs:
     - name: Push Docker image to Docker Hub
       run: |
         docker push razumuhin/html:${{ steps.determine_version.outputs.NEW_VERSION }}
+
