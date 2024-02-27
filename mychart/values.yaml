@@ -6,10 +6,10 @@ replicaCount: 1
 
 image:
   repository: razumuhin/html:v1
-  tag: latest
+  #tag: latest
   pullPolicy: IfNotPresent
   # Overrides the image tag whose default is the chart appVersion.
-  tag: latest
+  #tag: latest
 
 imagePullSecrets: []
 nameOverride: ""
