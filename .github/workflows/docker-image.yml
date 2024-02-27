@@ -16,7 +16,7 @@ jobs:
       - name: Increase version number
         id: version
         run: |
-          VERSION=$(./increase_version.sh)  # increase_version.sh betiğinize uygun yolu verin
+          VERSION=$(.github/workflows/increase_version.sh)  # increase_version.sh betiğinize uygun yolu verin
           echo "New version: $VERSION"
           echo "::set-output name=new_version::$VERSION"
 
